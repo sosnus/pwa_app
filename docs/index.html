@@ -1,0 +1,86 @@
+const char mainPage[] PROGMEM = R"=====(
+
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>myAwesomeLed</title>
+
+</head>
+
+<body>
+  <div>
+    <h3>Red</h3>
+    <input type="range" id="ledR" min="0" max="255" /><br><br>
+    <h3>Green</h3>
+    <input type="range" id="ledG" min="0" max="255" /><br><br>
+    <h3>Blue</h3>
+    <input type="range" id="ledB" min="0" max="255" /><br><br><br>
+    <button type="button" onclick="sendRequest(1000,0,0)" href="#">SET</button>
+    <input id="clickMe" type="button" value="RED" onclick="sendRequest(100,0,0);" />
+    <input id="clickMe" type="button" value="GREEN" onclick="sendRequest(0,100,0);" />
+    <input id="clickMe" type="button" value="YELLOW" onclick="sendRequest(50,50,0);" />
+    <input id="clickMe" type="button" value="YELLOW" onclick="createCORSRequest('GET',);" />
+    <p id="respond"></p>
+  </div>
+  <script>
+    function createCORSRequest(method, url) {
+  var xhr = new XMLHttpRequest();
+  if ("withCredentials" in xhr) {
+
+    // Check if the XMLHttpRequest object has a "withCredentials" property.
+    // "withCredentials" only exists on XMLHTTPRequest2 objects.
+    xhr.open(method, url, true);
+
+  } else if (typeof XDomainRequest != "undefined") {
+
+    // Otherwise, check if XDomainRequest.
+    // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+    xhr = new XDomainRequest();
+    xhr.open(method, url);
+
+  } else {
+
+    // Otherwise, CORS is not supported by the browser.
+    xhr = null;
+
+  }
+  return xhr;
+}
+
+var xhr = createCORSRequest('GET', url);
+if (!xhr) {
+  throw new Error('CORS not supported');
+}
+
+    function sendRequest(_r,_g,_b) {
+if(_r>500)
+{
+
+      var ledR = document.getElementById('ledR').value
+      var ledG = document.getElementById('ledG').value
+      var ledB = document.getElementById('ledB').value
+}
+else
+{
+  var ledR = _r
+      var ledG = _g
+      var ledB = _b
+}
+      var link = "http://10.50.35.87/led/?ledR=" + ledR + "&ledG=" + ledG + "&ledB=" + ledB;
+      console.log(link);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("respond").innerHTML = ("R=" + ledR + " G=" + ledG + " B=" + ledB); //this.responseText;
+        }
+      };
+      xhttp.open("POST", link, true);
+      xhttp.send();
+    }
+    
+  </script>
+</body>
+
+</html>
+)=====";
